@@ -9,3 +9,9 @@ rule_files:
 
 
 scrape_configs:
+  - job_name: "Omada_Exporter"
+    metrics_path: "/appmetrics"
+    static_configs:
+      - targets: [
+          "dockerserver.Horna.local:51772"
+        ]
