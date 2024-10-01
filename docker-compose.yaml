@@ -52,3 +52,13 @@ services:
     hostname: prometheus_tempo
     ports:
       - ${PROMETHEUS_PORT}:9090
+
+  loki:
+    image: grafana/loki:${LOKI_VER}
+    container_name: Loki_Tempo
+    command:
+      - -config.file=/etc/loki/config.yaml
+    volumes:
+      - ./config/loki.yaml:/etc/loki/config.yaml
+    ports:
+      - ${LOKI_PORT}:3100
