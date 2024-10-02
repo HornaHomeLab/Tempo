@@ -13,26 +13,26 @@ scrape_configs:
     metrics_path: "/appmetrics"
     static_configs:
       - targets: [
-          "dockerserver.Horna.local:51772"
+          "apps.Horna.local:51772"
         ]
   
   - job_name: "Tempo"
     static_configs:
       - targets: [
-          "dockerserver.Horna.local:3200"
+          "apps.Horna.local:3200"
         ]
 
   - job_name: "Loki"
     static_configs:
       - targets: [
-          "dockerserver.Horna.local:3111",
+          "apps.Horna.local:3111",
           "services.Horna.local:3100"
         ]
   
   - job_name: "Prometheus"
     static_configs:
       - targets: [
-          "dockerserver.Horna.local:9999",
+          "apps.Horna.local:9999",
           "services.Horna.local:9090"
         ]
 
