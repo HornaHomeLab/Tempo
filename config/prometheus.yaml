@@ -15,3 +15,28 @@ scrape_configs:
       - targets: [
           "dockerserver.Horna.local:51772"
         ]
+  
+  - job_name: "Tempo"
+    static_configs:
+      - targets: [
+          "dockerserver.Horna.local:3200"
+        ]
+
+  - job_name: "Loki_Tempo"
+    static_configs:
+      - targets: [
+          "dockerserver.Horna.local:3111",
+          "services.Horna.local:3100"
+        ]
+  
+  - job_name: "Prometheus"
+    static_configs:
+      - targets: [
+          "dockerserver.Horna.local:9999",
+          "services.Horna.local:9090"
+        ]
+  - job_name: "Grafana"
+    static_configs:
+      - targets: [
+          "apps.Horna.local:3000"
+        ]
