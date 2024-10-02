@@ -22,7 +22,7 @@ scrape_configs:
           "dockerserver.Horna.local:3200"
         ]
 
-  - job_name: "Loki_Tempo"
+  - job_name: "Loki"
     static_configs:
       - targets: [
           "dockerserver.Horna.local:3111",
@@ -35,6 +35,7 @@ scrape_configs:
           "dockerserver.Horna.local:9999",
           "services.Horna.local:9090"
         ]
+
   - job_name: "Grafana"
     static_configs:
       - targets: [
