@@ -36,6 +36,8 @@ services:
       - --web.enable-remote-write-receiver
       - --enable-feature=exemplar-storage
       - --enable-feature=native-histograms
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=14d
     volumes:
       - ./config/prometheus.yaml:/etc/prometheus.yaml
       - Prometheus_Data:/prometheus
