@@ -13,8 +13,9 @@ services:
       - ./tempo-data:/var/tempo
 
   memcached:
-    image: memcached:${MEMCACHED_VER}
     container_name: memcached
+    restart: unless-stopped
+    image: memcached:${MEMCACHED_VER}
     ports:
       - "11211:11211"
     environment:
@@ -23,6 +24,7 @@ services:
 
   tempo:
     container_name: Tempo
+    restart: unless-stopped
     image: *tempoImage
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
@@ -41,6 +43,7 @@ services:
 
   prometheus:
     container_name: Prometheus_Tempo
+    restart: unless-stopped
     image: prom/prometheus:${PROMETHEUS_VER}
     command:
       - --config.file=/etc/prometheus.yaml
@@ -54,8 +57,9 @@ services:
       - ${PROMETHEUS_PORT}:9090
 
   loki:
-    image: grafana/loki:${LOKI_VER}
     container_name: Loki_Tempo
+    restart: unless-stopped
+    image: grafana/loki:${LOKI_VER}
     command:
       - -config.file=/etc/loki/config.yaml
     volumes:
