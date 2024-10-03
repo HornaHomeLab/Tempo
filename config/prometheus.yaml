@@ -15,6 +15,12 @@ scrape_configs:
       - targets: [
           "apps.Horna.local:51772"
         ]
+  - job_name: "SpeedTest_Exporter"
+    metrics_path: "/appmetrics"
+    static_configs:
+      - targets: [
+          "apps.Horna.local:8000"
+        ]
   
   - job_name: "Tempo"
     static_configs:
