@@ -1,20 +1,8 @@
 services:
-  # Tempo runs as user 10001, and docker compose creates the volume as root.
-  # As such, we need to chown the volume in order for Tempo to start correctly
-  init:
-    container_name: Init_Tempo
-    image: &tempoImage grafana/tempo:${TEMPO_VER}
-    user: root
-    entrypoint:
-      - "chown"
-      - "10001:10001"
-      - "/var/tempo"
-    volumes:
-      - ./tempo-data:/var/tempo
-
   memcached:
+    container_name: MemCached_Tempo
+    restart: unless-stopped
     image: memcached:${MEMCACHED_VER}
-    container_name: memcached
     ports:
       - "11211:11211"
     environment:
@@ -23,11 +11,12 @@ services:
 
   tempo:
     container_name: Tempo
-    image: *tempoImage
+    restart: unless-stopped
+    image: grafana/tempo:${TEMPO_VER}
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./config/tempo.yaml:/etc/tempo.yaml
-      - ./tempo-data:/var/tempo
+      - Tempo_Data:/var/tempo
     ports:
       - ${TEMPO_JAEGER_PORT}:14268  # jaeger ingest
       - ${TEMPO_PORT}:3200   # tempo
@@ -36,29 +25,39 @@ services:
       - $TEMPO_OTLP_HTTP:4318  # otlp http
       - ${TEMPO_OTLP_ZIPKIN}:9411   # zipkin
     depends_on:
-      - init
       - memcached
 
   prometheus:
     container_name: Prometheus_Tempo
+    restart: unless-stopped
     image: prom/prometheus:${PROMETHEUS_VER}
     command:
       - --config.file=/etc/prometheus.yaml
       - --web.enable-remote-write-receiver
       - --enable-feature=exemplar-storage
       - --enable-feature=native-histograms
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=14d
     volumes:
       - ./config/prometheus.yaml:/etc/prometheus.yaml
+      - Prometheus_Data:/prometheus
     hostname: prometheus_tempo
     ports:
       - ${PROMETHEUS_PORT}:9090
 
   loki:
-    image: grafana/loki:${LOKI_VER}
     container_name: Loki_Tempo
+    restart: unless-stopped
+    image: grafana/loki:${LOKI_VER}
     command:
       - -config.file=/etc/loki/config.yaml
     volumes:
       - ./config/loki.yaml:/etc/loki/config.yaml
+      - Loki_Data:/loki
     ports:
       - ${LOKI_PORT}:3100
+
+volumes:
+  Tempo_Data:
+  Prometheus_Data:
+  Loki_Data:
