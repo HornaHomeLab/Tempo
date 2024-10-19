@@ -21,3 +21,9 @@ scrape_configs:
       - targets: [
           "apps.Horna.local:8000"
         ]
+  - job_name: "GreenCell_Exporter"
+    metrics_path: "/appmetrics"
+    static_configs:
+      - targets: [
+          "apps.Horna.local:58968"
+        ]
